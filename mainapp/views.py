@@ -9,11 +9,21 @@ def index(request):
 
 def gen_passwords(request):
     chr_list = list('abcdefghijklmnopqrstuvwxyz')
-    psw = random.choice(chr_list)
-    content = {
-        'psw': psw,
-    }
-    return render(request, 'mainapp/gen_pass.html', content)
+
+    if request.GET.get('uppercase'):
+        chr_list.extend(list('ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
+    if request.GET.get('special'):
+        chr_list.extend(list('!@#$%^&*()'))
+    if request.GET.get('numbers'):
+        chr_list.extend(list('0123456789'))
+
+    length = int(request.GET.get('length', 12))
+
+    psw = ''
+    for x in range(length):
+        psw += random.choice(chr_list)
+
+    return render(request, 'mainapp/gen_pass.html', {'psw': psw})
 
 
 def about(request):
